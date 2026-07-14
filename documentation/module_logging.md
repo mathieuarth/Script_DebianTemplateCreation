@@ -1,23 +1,23 @@
-# Module logging
+# Logging module
 
-## Rôle
+## Role
 
-Le module logging fournit les fonctions d’affichage et d’écriture de journal pour l’ensemble du pipeline.
+The logging module provides display and log-writing functions for the whole pipeline.
 
-## Commandes utilisées
+## Commands used
 
-- `echo` : affiche un message dans le terminal.
-- `echo -e` : permet d’ajouter des couleurs ANSI dans les messages.
-- `date '+%Y-%m-%d %H:%M:%S'` : ajoute un horodatage au log.
-- `>> "$LOG_FILE"` : écrit la ligne dans un fichier de journal.
-- `2>/dev/null || true` : ignore les erreurs d’écriture sans interrompre le script.
+- `echo`: prints a message to the terminal.
+- `echo -e`: allows ANSI colors to be added to messages.
+- `date '+%Y-%m-%d %H:%M:%S'`: adds a timestamp to the log entry.
+- `>> "$LOG_FILE"`: writes the line to a log file.
+- `2>/dev/null || true`: ignores write errors without stopping the script.
 
-## Comportement
+## Behavior
 
-Le module définit trois fonctions principales :
+The module defines three main functions:
 
-- `log()` : affiche un message d’information et l’enregistre.
-- `ok()` : affiche un message de succès et l’enregistre.
-- `err()` : affiche un message d’erreur et l’enregistre.
+- `log()`: displays an information message and records it.
+- `ok()`: displays a success message and records it.
+- `err()`: displays an error message and records it.
 
-Le fichier de log est défini par défaut dans `/var/log/template_builder.log`.
+The log file is set by default to `/var/log/template_builder.log`.

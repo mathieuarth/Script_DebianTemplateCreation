@@ -1,12 +1,8 @@
 #!/bin/bash
 ############################################
 # Image preparation module
-# - Download cloud image
-# - Customize packages
-# - SSH hardening
-# - Keyboard layout
-# - journald + sysctl hardening
-# - Compression
+# Downloads the Debian cloud image, customizes it,
+# applies hardening settings, and compresses the result.
 ############################################
 
 log "Starting image preparation..."
@@ -35,10 +31,10 @@ ok "Base packages installed and timezone set."
 ############################################
 log "Applying SSH hardening..."
 
-#virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config"
-#virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config"
-#virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config"
-virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config"
+virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config"
+virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config"
+virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config"
+#virt-customize -a "$IMG_ORIG" --run-command "sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config"
 virt-customize -a "$IMG_ORIG" --run-command "echo 'PrintMotd no' >> /etc/ssh/sshd_config"
 virt-customize -a "$IMG_ORIG" --run-command "echo 'PrintLastLog no' >> /etc/ssh/sshd_config"
 

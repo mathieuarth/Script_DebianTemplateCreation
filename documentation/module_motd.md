@@ -1,25 +1,25 @@
-# Module motd
+# MOTD module
 
-## Rôle
+## Role
 
-Le module motd installe un banner dynamique affiché à la connexion des utilisateurs sur la VM.
+The MOTD module installs a dynamic banner displayed when users connect to the VM.
 
-## Commandes utilisées
+## Commands used
 
-- `mktemp -d` : crée un répertoire temporaire pour stocker le script du banner.
-- `cat > "$workdir/00-custom-motd.sh" <<'EOF'` : écrit le script du message d’accueil.
-- `virt-customize -a "$IMG_ORIG" --copy-in ...` : copie le fichier dans l’image.
-- `chmod +x` : rend le script exécutable.
-- `chmod -x /etc/update-motd.d/*` : désactive les MOTD par défaut pour éviter les conflits.
-- `truncate -s 0 /etc/motd` : vide le fichier motd courant.
+- `mktemp -d`: creates a temporary directory to store the banner script.
+- `cat > "$workdir/00-custom-motd.sh" <<'EOF'`: writes the welcome message script.
+- `virt-customize -a "$IMG_ORIG" --copy-in ...`: copies the file into the image.
+- `chmod +x`: makes the script executable.
+- `chmod -x /etc/update-motd.d/*`: disables default MOTD scripts to avoid conflicts.
+- `truncate -s 0 /etc/motd`: clears the current MOTD file.
 
-## Comportement
+## Behavior
 
-Le script affiche des informations telles que le hostname, le noyau, l’uptime, la charge CPU, la mémoire, l’espace disque, l’état des services SSH/fail2ban/cron, ainsi que l’état du réseau et des mises à jour.
+The script displays information such as the hostname, kernel, uptime, CPU load, memory, disk usage, the status of SSH/fail2ban/cron services, and network and update status.
 
-## Exemple d’affichage
+## Example display
 
-Voici un exemple de ce que l’utilisateur peut voir à la connexion :
+Here is an example of what the user may see at login:
 
 ```text
                  _   _   _   _

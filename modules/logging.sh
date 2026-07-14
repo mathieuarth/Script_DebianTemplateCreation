@@ -1,18 +1,17 @@
 #!/bin/bash
 ############################################
-# Logging module
-# Provides file logging functions used by
-# all other modules.
+# Logging helper module
+# Provides shared logging helpers for all other modules.
+# The functions print to stdout and optionally append
+# entries to a log file when LOG_FILE is set.
 ############################################
 
-#!/bin/bash
-
-# Couleurs
+# Colors used by the logging helpers.
 INFO="\e[36m[INFO]\e[0m"
 OK="\e[32m[OK]\e[0m"
 ERR="\e[31m[ERROR]\e[0m"
 
-# Fichier de log (optionnel)
+# Optional log file path.
 LOG_FILE="/var/log/template_builder.log"
 
 log() {
@@ -30,10 +29,9 @@ err() {
     log_file "$1"
 }
 
-# Version blindee : ne retourne JAMAIS une erreur
+# Blind version: never returns an error.
 log_file() {
     if [ -n "$LOG_FILE" ]; then
-        # On ignore les erreurs d'ecriture
         echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE" 2>/dev/null || true
     fi
     return 0

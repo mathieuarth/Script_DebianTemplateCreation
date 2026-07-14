@@ -1,22 +1,22 @@
-# Module vm
+# VM module
 
-## Rôle
+## Role
 
-Le module vm configure la VM finale à partir de l’image préparée et des paramètres définis au début du pipeline.
+The VM module configures the final VM from the prepared image and the parameters defined at the start of the pipeline.
 
-## Commandes utilisées
+## Commands used
 
-Le contenu réel du module est encore très minimal, mais il est prévu pour intégrer les étapes de création et de configuration de la machine virtuelle via Proxmox.
+The actual content of the module is still minimal, but it is intended to integrate the steps for creating and configuring the virtual machine through Proxmox.
 
-## Comportement attendu
+## Expected behavior
 
-Ce module intervient à la fin du pipeline et doit permettre :
+This module runs at the end of the pipeline and should allow:
 
-- la création ou la mise à jour de la VM,
-- l’association de l’image préparée à la VM,
-- la définition du stockage, de la mémoire, des CPU et du réseau,
-- la configuration du système final selon les options fournies.
+- creation or update of the VM,
+- association of the prepared image with the VM,
+- definition of storage, memory, CPU, and network settings,
+- configuration of the final system based on the provided options.
 
-## Conseils
+## Notes
 
-Pour l’extension du projet, ce module est le bon endroit pour ajouter les commandes Proxmox telles que `qm create`, `qm set`, `qm start` ou `qm template`.
+For future extension of the project, this is the right place to add Proxmox commands such as `qm create`, `qm set`, `qm start`, or `qm template`.

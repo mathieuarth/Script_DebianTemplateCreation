@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+############################################
+# Main entry point for the Debian template build pipeline
+# This script runs the required modules in sequence to
+# build and prepare a reusable Debian template.
+############################################
+
 source modules/logging.sh
 
 log "Starting template build pipeline..."

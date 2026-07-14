@@ -1,11 +1,8 @@
 #!/bin/bash
 ############################################
 # Base module
-# - Colors
-# - Logging wrappers
-# - Root check
-# - Default variables
-# - Argument parsing
+# Defines the shared defaults, root privilege checks,
+# and command-line argument parsing used by the pipeline.
 ############################################
 
 # Colors
@@ -41,7 +38,7 @@ IMG_URL="https://cloud.debian.org/images/cloud/trixie/latest/debian-13-genericcl
 IMG_ORIG="debian-13-genericcloud-amd64.qcow2"
 IMG_SHRINK="debian-13-genericcloud-amd64-shrink.qcow2"
 
-ROOT_PASS="H0m3n3treseau@RTH"
+ROOT_PASS="YourP@sswordH3r3"
 ANSIBLE_KEY_FILE="/root/ansible.pub"
 DISK_SIZE="4G"
 

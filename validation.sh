@@ -1,75 +1,81 @@
 #!/bin/bash
 set -e
 
-echo "=== VALIDATION DU PROJET ==="
+############################################
+# Validation helper script
+# Verifies the project structure, permissions, and shell
+# script formatting before the build pipeline is run.
+############################################
+
+echo "=== PROJECT VALIDATION ==="
 
 MODULES_DIR="modules"
 REQUIRED_MODULES=("logging.sh" "base.sh" "checks.sh" "image.sh" "motd.sh" "vm.sh")
 
-echo "[1] Vérification du dossier modules/"
+echo "[1] Checking the modules directory..."
 if [ ! -d "$MODULES_DIR" ]; then
-    echo "❌ Dossier 'modules/' introuvable."
+    echo "❌ Directory 'modules/' not found."
     exit 1
 fi
-echo "✔ Dossier modules/ trouvé."
+echo "✔ modules/ directory found."
 
-echo "[2] Vérification des modules obligatoires..."
+echo "[2] Checking required modules..."
 for mod in "${REQUIRED_MODULES[@]}"; do
     if [ ! -f "$MODULES_DIR/$mod" ]; then
-        echo "❌ Module manquant : $mod"
+        echo "❌ Missing module: $mod"
         MISSING=true
     else
-        echo "✔ Module présent : $mod"
+        echo "✔ Module present: $mod"
     fi
 done
 
 if [ "$MISSING" = true ]; then
-    echo "❌ Un ou plusieurs modules manquent."
+    echo "❌ One or more modules are missing."
     exit 1
 fi
 
-echo "[3] Vérification des permissions..."
+echo "[3] Checking permissions..."
 for mod in "${REQUIRED_MODULES[@]}"; do
     if [ ! -x "$MODULES_DIR/$mod" ]; then
-        echo "❌ $mod n'est pas exécutable."
+        echo "❌ $mod is not executable."
         PERM_ISSUE=true
     else
-        echo "✔ $mod est exécutable."
+        echo "✔ $mod is executable."
     fi
 done
 
-echo "[4] Vérification des retours Windows (CRLF)..."
+echo "[4] Checking Windows line endings (CRLF)..."
 for mod in "${REQUIRED_MODULES[@]}"; do
     if file "$MODULES_DIR/$mod" | grep -q "CRLF"; then
-        echo "❌ CRLF détecté dans $mod"
+        echo "❌ CRLF detected in $mod"
         CRLF_ISSUE=true
     else
-        echo "✔ Format Unix OK : $mod"
+        echo "✔ Unix format OK: $mod"
     fi
 done
 
-echo "[5] Vérification du shebang..."
+echo "[5] Checking shebang..."
 for mod in "${REQUIRED_MODULES[@]}"; do
     if ! head -n 1 "$MODULES_DIR/$mod" | grep -q "#!/bin/bash"; then
-        echo "❌ Shebang incorrect dans $mod"
+        echo "❌ Incorrect shebang in $mod"
         SHEBANG_ISSUE=true
     else
-        echo "✔ Shebang OK : $mod"
+        echo "✔ Shebang OK: $mod"
     fi
 done
 
-echo "[6] Vérification du main.sh..."
+echo "[6] Checking main.sh..."
 if [ ! -f main.sh ]; then
-    echo "❌ main.sh introuvable."
+    echo "❌ main.sh not found."
     exit 1
 fi
 
-echo "✔ main.sh trouvé."
+echo "✔ main.sh found."
 
-echo "=== VALIDATION TERMINÉE ==="
+echo "=== VALIDATION COMPLETE ==="
 
 if [ "$PERM_ISSUE" = true ] || [ "$CRLF_ISSUE" = true ] || [ "$SHEBANG_ISSUE" = true ]; then
-    echo "⚠ Des problèmes ont été détectés. Lance repair.sh."
+    echo "⚠ Problems detected. Run repair.sh."
 else
-    echo "✔ Aucun problème détecté."
+    echo "✔ No problems detected."
 fi

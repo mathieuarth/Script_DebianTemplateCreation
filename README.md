@@ -1,18 +1,18 @@
-# Script Debian Template Creation
+# Debian Template Creation Script
 
-Ce projet contient un ensemble de scripts Bash pour automatiser la création et la préparation d’un template Debian, avec une logique de validation, de réparation et de construction automatisée.
+This project contains a set of Bash scripts to automate the creation and preparation of a Debian template, with validation, repair, and automated build logic.
 
-## Objectif
+## Goal
 
-Le dépôt vise à fournir une base structurée pour :
+The repository provides a structured base for:
 
-- préparer une image Debian cloud,
-- appliquer des personnalisations système,
-- créer ou préparer une machine virtuelle Proxmox,
-- valider la cohérence du pipeline,
-- corriger automatiquement les problèmes courants.
+- preparing a Debian cloud image,
+- applying system customizations,
+- creating or preparing a Proxmox virtual machine,
+- validating pipeline consistency,
+- automatically fixing common issues.
 
-## Structure du projet
+## Project structure
 
 ```text
 .
@@ -30,11 +30,11 @@ Le dépôt vise à fournir une base structurée pour :
     └── *.md
 ```
 
-## Scripts principaux
+## Main scripts
 
 ### main.sh
 
-Point d’entrée du pipeline. Il charge successivement les modules suivants :
+Entry point of the pipeline. It loads the following modules in sequence:
 
 1. `modules/logging.sh`
 2. `modules/base.sh`
@@ -44,51 +44,63 @@ Point d’entrée du pipeline. Il charge successivement les modules suivants :
 
 ### validation.sh
 
-Vérifie la présence des modules attendus, leurs permissions, leurs shebangs, ainsi que la présence de `main.sh`.
+Checks the presence of the expected modules, their permissions, shebangs, and the presence of `main.sh`.
 
 ### repair.sh
 
-Corrige automatiquement les problèmes courants du projet :
+Automatically fixes common project issues:
 
-- renommage des modules mal nommés,
-- conversion des fichiers en format Unix,
-- correction des permissions,
-- correction du shebang,
-- restauration d’un `main.sh` de base si nécessaire.
+- renaming incorrectly named modules,
+- converting files to Unix format,
+- fixing permissions,
+- correcting the shebang,
+- restoring a basic `main.sh` if needed.
 
-## Documentation par module
+## Module documentation
 
-Chaque module a un rôle précis dans le pipeline :
+Each module has a specific role in the pipeline:
 
-- [documentation/module_logging.md](documentation/module_logging.md) : fonctions de log et d’affichage.
-- [documentation/module_base.md](documentation/module_base.md) : variables globales, options et préparation du contexte.
-- [documentation/module_checks.md](documentation/module_checks.md) : vérifications préalables avant création.
-- [documentation/module_image.md](documentation/module_image.md) : téléchargement et personnalisation de l’image.
-- [documentation/module_motd.md](documentation/module_motd.md) : installation d’un banner dynamique.
-- [documentation/module_vm.md](documentation/module_vm.md) : préparation de la VM finale.
+- [documentation/module_logging.md](documentation/module_logging.md): logging and display functions.
+- [documentation/module_base.md](documentation/module_base.md): global variables, options, and context setup.
+- [documentation/module_checks.md](documentation/module_checks.md): pre-creation validation checks.
+- [documentation/module_image.md](documentation/module_image.md): image download and customization.
+- [documentation/module_motd.md](documentation/module_motd.md): dynamic banner installation.
+- [documentation/module_vm.md](documentation/module_vm.md): final VM preparation.
 
-## Utilisation
+## Usage
 
-### Valider le projet
+### Validate the project
 
 ```bash
 bash validation.sh
 ```
 
-### Réparer le projet
+### Repair the project
 
 ```bash
 bash repair.sh
 ```
 
-### Lancer le pipeline principal
+### Run the main pipeline
 
 ```bash
 bash main.sh
 ```
 
+### Schedule weekly template recreation
+
+A dedicated script can add a weekly cron task:
+
+```bash
+bash schedule_template_rebuild.sh
+```
+
+The script creates a cron entry that runs `main.sh` every week, with logs sent to `/var/log/template_rebuild.log` by default.
+
+Detailed documentation is available in [documentation/schedule_template_rebuild.md](documentation/schedule_template_rebuild.md).
+
 ## Notes
 
-- Les scripts utilisent Bash et doivent être exécutés avec les droits appropriés.
-- Le pipeline est pensé pour être modulable et facilement extensible.
-- Les commandes Proxmox et les opérations système sont à intégrer dans les modules selon les besoins du déploiement.
+- The scripts use Bash and should be executed with the appropriate permissions.
+- The pipeline is designed to be modular and easily extensible.
+- Proxmox commands and system operations should be integrated into the modules according to deployment needs.

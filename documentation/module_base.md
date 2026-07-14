@@ -1,18 +1,18 @@
-# Module base
+# Base module
 
-## Rôle
+## Role
 
-Le module base initialise les variables globales du pipeline et prépare les paramètres du déploiement.
+The base module initializes the pipeline's global variables and prepares deployment parameters.
 
-## Commandes et mécanismes utilisés
+## Commands and mechanisms used
 
-- `if [[ $EUID -ne 0 ]]; then` : vérifie que le script est exécuté en tant que root.
-- `exit 1` : stoppe l’exécution si l’utilisateur n’a pas les privilèges nécessaires.
-- `VMID="9999"` et autres variables : définissent les valeurs par défaut utilisées par le pipeline.
-- `while [[ $# -gt 0 ]]; do ... esac` : parse les options passées en ligne de commande.
-- `--vmid`, `--name`, `--storage`, `--memory`, `--cores`, `--disk-size`, `--user-key`, `--root-pass`, `--force`, `--verbose`, `--dry-run`, `--log-file` : options d’entrée configurables.
-- `set -x` : active le mode verbeux pour afficher chaque commande exécutée.
+- `if [[ $EUID -ne 0 ]]; then`: verifies that the script is run as root.
+- `exit 1`: stops execution if the user does not have the required privileges.
+- `VMID="9999"` and other variables: define the default values used by the pipeline.
+- `while [[ $# -gt 0 ]]; do ... esac`: parses command-line options.
+- `--vmid`, `--name`, `--storage`, `--memory`, `--cores`, `--disk-size`, `--user-key`, `--root-pass`, `--force`, `--verbose`, `--dry-run`, `--log-file`: configurable input options.
+- `set -x`: enables verbose mode to display each executed command.
 
-## Comportement
+## Behavior
 
-Ce module ne fait pas de modifications système directes ; il sert surtout à préparer le contexte d’exécution du pipeline.
+This module does not make direct system changes; it mainly prepares the execution context for the pipeline.

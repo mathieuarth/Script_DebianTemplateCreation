@@ -1,11 +1,8 @@
 #!/bin/bash
 ############################################
 # VM creation module
-# - Create VM
-# - Import disk
-# - Resize disk
-# - Configure Cloud-Init
-# - Convert to template
+# Creates the Proxmox VM, imports the prepared disk,
+# configures Cloud-Init, and converts the VM to a template.
 ############################################
 
 log "Starting VM creation..."

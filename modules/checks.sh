@@ -1,10 +1,8 @@
 #!/bin/bash
 ############################################
 # Pre-flight checks module
-# - Network selection
-# - SSH key presence
-# - VMID availability
-# - Dry-run mode
+# Validates the selected network mode, SSH key presence,
+# VM ID availability, and dry-run behavior before changes are applied.
 ############################################
 
 log "Performing pre-flight checks..."

@@ -1,55 +1,63 @@
 #!/bin/bash
 set -e
 
-echo "=== RÉPARATION AUTOMATIQUE DU PROJET ==="
+############################################
+# Repair helper script
+# Restores the expected project structure and file format
+# for the Debian template build pipeline.
+############################################
+
+echo "=== AUTOMATIC PROJECT REPAIR ==="
 
 MODULES_DIR="modules"
 REQUIRED_MODULES=("logging.sh" "base.sh" "checks.sh" "image.sh" "motd.sh" "vm.sh")
 
-echo "[1] Création du dossier modules si absent..."
+echo "[1] Creating the modules directory if missing..."
 mkdir -p "$MODULES_DIR"
 echo "✔ OK"
 
-echo "[2] Correction des noms de fichiers..."
-# Corrige cxeck.sh → checks.sh
+echo "[2] Correcting file names..."
+# Rename legacy module names to the expected module names.
 if [ -f "$MODULES_DIR/cxeck.sh" ]; then
     mv "$MODULES_DIR/cxeck.sh" "$MODULES_DIR/checks.sh"
-    echo "✔ Renommé cxeck.sh → checks.sh"
+    echo "✔ Renamed cxeck.sh → checks.sh"
 fi
 
-# Corrige check.sh → checks.sh
 if [ -f "$MODULES_DIR/check.sh" ]; then
     mv "$MODULES_DIR/check.sh" "$MODULES_DIR/checks.sh"
-    echo "✔ Renommé check.sh → checks.sh"
+    echo "✔ Renamed check.sh → checks.sh"
 fi
 
-echo "[3] Correction des retours Windows (CRLF)..."
+echo "[3] Fixing Windows line endings (CRLF)..."
+# Normalize the shell scripts to Unix line endings.
 for mod in "${REQUIRED_MODULES[@]}"; do
     if [ -f "$MODULES_DIR/$mod" ]; then
         dos2unix "$MODULES_DIR/$mod" 2>/dev/null || true
-        echo "✔ CRLF corrigé dans $mod"
+        echo "✔ CRLF fixed in $mod"
     fi
 done
 
-echo "[4] Correction des permissions..."
+echo "[4] Fixing permissions..."
+# Ensure the helper scripts are executable.
 for mod in "${REQUIRED_MODULES[@]}"; do
     if [ -f "$MODULES_DIR/$mod" ]; then
         chmod +x "$MODULES_DIR/$mod"
-        echo "✔ Permissions fixées : $mod"
+        echo "✔ Permissions fixed: $mod"
     fi
 done
 
-echo "[5] Correction du shebang..."
+echo "[5] Fixing shebang..."
+# Restore the expected Bash shebang on each shell script.
 for mod in "${REQUIRED_MODULES[@]}"; do
     if [ -f "$MODULES_DIR/$mod" ]; then
         sed -i '1s|.*|#!/bin/bash|' "$MODULES_DIR/$mod"
-        echo "✔ Shebang corrigé : $mod"
+        echo "✔ Shebang fixed: $mod"
     fi
 done
 
-echo "[6] Vérification du main.sh..."
+echo "[6] Checking main.sh..."
 if [ ! -f main.sh ]; then
-    echo "❌ main.sh absent → création d'un squelette."
+    echo "❌ main.sh missing → creating a template stub."
     cat > main.sh << 'EOF'
 #!/bin/bash
 set -e
@@ -61,10 +69,10 @@ source modules/motd.sh
 source modules/vm.sh
 EOF
     chmod +x main.sh
-    echo "✔ main.sh créé."
+    echo "✔ main.sh created."
 else
-    echo "✔ main.sh présent."
+    echo "✔ main.sh present."
 fi
 
-echo "=== RÉPARATION TERMINÉE ==="
-echo "✔ Le projet est maintenant cohérent et fonctionnel."
+echo "=== REPAIR COMPLETE ==="
+echo "✔ The project is now consistent and functional."

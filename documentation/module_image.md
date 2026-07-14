@@ -1,18 +1,18 @@
-# Module image
+# Image module
 
-## Rôle
+## Role
 
-Le module image prépare l’image cloud Debian en y ajoutant les composants nécessaires au template final.
+The image module prepares the Debian cloud image by adding the components required for the final template.
 
-## Commandes utilisées
+## Commands used
 
-- `wget -q "$IMG_URL" -O "$IMG_ORIG"` : télécharge l’image cloud Debian.
-- `virt-customize -a "$IMG_ORIG" --install ...` : installe des paquets dans l’image.
-- `--timezone "Europe/Paris"` : configure le fuseau horaire.
-- `--root-password password:"$ROOT_PASS"` : définit le mot de passe root de l’image.
-- `virt-customize -a "$IMG_ORIG" --run-command ...` : applique des modifications via des commandes shell à l’intérieur de l’image.
-- `qemu-img convert -O qcow2 -c "$IMG_ORIG" "$IMG_SHRINK"` : compresse l’image finale en format qcow2.
+- `wget -q "$IMG_URL" -O "$IMG_ORIG"`: downloads the Debian cloud image.
+- `virt-customize -a "$IMG_ORIG" --install ...`: installs packages into the image.
+- `--timezone "Europe/Paris"`: configures the time zone.
+- `--root-password password:"$ROOT_PASS"`: sets the root password for the image.
+- `virt-customize -a "$IMG_ORIG" --run-command ...`: applies changes through shell commands inside the image.
+- `qemu-img convert -O qcow2 -c "$IMG_ORIG" "$IMG_SHRINK"`: compresses the final image in qcow2 format.
 
-## Modifications réalisées
+## Changes made
 
-Ce module installe des paquets utiles (`qemu-guest-agent`, `python3`, `curl`, `sudo`, `fail2ban`, etc.), configure le clavier FR, applique un durcissement SSH et système, puis produit une image compressée prête à être utilisée.
+This module installs useful packages (`qemu-guest-agent`, `python3`, `curl`, `sudo`, `fail2ban`, etc.), configures the French keyboard layout, applies SSH and system hardening, and produces a compressed image ready for use.

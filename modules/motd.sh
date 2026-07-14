@@ -2,19 +2,9 @@
 
 ############################################
 # Dynamic MOTD installation module
-# This module installs a fully dynamic,
-# POSIX-compliant MOTD system using run-parts.
-#
-# It creates:
-#   - color definitions
-#   - banner (hostname + distro)
-#   - system info
-#   - network info
-#   - storage info
-#   - ansible info
-#   - update status
-#
-# All scripts are placed in /etc/update-motd.d/
+# This module installs a fully dynamic MOTD banner
+# for the VM image so that login sessions display
+# system, network, and update information.
 ############################################
 log "Installing MOTD banner script for VM..."
 
@@ -24,14 +14,14 @@ trap 'rm -rf "$workdir"' EXIT
 cat > "$workdir/00-custom-motd.sh" <<'EOF'
 #!/bin/bash
 
-# Couleurs
+# Colors
 CYAN="\e[36m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
 RED="\e[31m"
 RESET="\e[0m"
 
-# Fonctions utilitaires
+# Utility functions
 status_icon() {
     if systemctl is-active --quiet "$1"; then
         echo -e "${GREEN}●${RESET}"
@@ -54,7 +44,7 @@ alert_value() {
     fi
 }
 
-# Informations système
+# System information
 HOSTNAME=$(hostname)
 KERNEL=$(uname -r)
 UPTIME=$(uptime -p)
@@ -73,30 +63,30 @@ DISK_PCT=$(df -h / | awk 'NR==2 {print $5}' | tr -d '%')
 
 CPU_CORES=$(nproc)
 
-# Alertes
+# Alerts
 LOAD_ALERT=$(alert_value ${LOAD1%.*} $((CPU_CORES/2)) $CPU_CORES)
 MEM_ALERT=$(alert_value $MEM_PCT 70 90)
 DISK_ALERT=$(alert_value $DISK_PCT 70 90)
 
-# Services VM
+# VM services
 SSH_STATUS=$(status_icon ssh)
 FAIL2BAN_STATUS=$(status_icon fail2ban)
 CRON_STATUS=$(status_icon cron)
 NETWORK_STATUS=$(status_icon NetworkManager)
 
-# Nombre de bans Fail2ban
+# Number of Fail2ban bans
 if command -v fail2ban-client >/dev/null 2>&1; then
     FAIL2BAN_BANS=$(fail2ban-client status sshd 2>/dev/null | grep "Currently banned" | awk '{print $NF}')
 else
     FAIL2BAN_BANS="N/A"
 fi
 
-# Ping gateway + Internet
+# Ping gateway and Internet
 GATEWAY=$(ip route | awk '/default/ {print $3}')
 PING_GW=$(ping -c1 -W1 "$GATEWAY" >/dev/null 2>&1 && echo -e "${GREEN}OK${RESET}" || echo -e "${RED}FAIL${RESET}")
 PING_NET=$(ping -c1 -W1 1.1.1.1 >/dev/null 2>&1 && echo -e "${GREEN}OK${RESET}" || echo -e "${RED}FAIL${RESET}")
 
-# État des interfaces réseau
+# Network interface status
 IFACES=$(ip -o link show | awk -F': ' '{print $2}')
 IFACE_STATUS=""
 for iface in $IFACES; do
@@ -108,11 +98,11 @@ for iface in $IFACES; do
     fi
 done
 
-# Mises à jour disponibles
+# Available updates
 UPDATES=$(apt list --upgradable 2>/dev/null | grep -v "Listing" | wc -l)
 UPDATES_ALERT=$(alert_value $UPDATES 10 50)
 
-# Dernières erreurs systemd
+# Recent systemd errors
 SYSTEMD_ERRORS=$(journalctl -p 3 -n 5 --no-pager 2>/dev/null | sed 's/^/ • /')
 
 echo -e "${GREEN}"
